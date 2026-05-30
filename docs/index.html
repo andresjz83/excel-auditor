@@ -99,9 +99,10 @@
   <p>Three ways. Pick what matches your comfort level.</p>
 
   <h3>Option A — Ask your AI (easiest)</h3>
-  <p>Open ChatGPT, Claude, Gemini, or any other AI chat. Paste the prompt below. It'll walk you through every click.</p>
+  <p>Click the button, paste into ChatGPT, Claude, Gemini, or any other AI chat. It will walk you through every click.</p>
   <div class="prompt-block">
-    <pre id="ai-prompt">I want to install a free Excel for Mac add-in called "Excel Auditor". It is open source and lives at https://github.com/andresjz83/excel-auditor.
+    <button class="download copy-prompt-cta copy-btn" data-copy-target="ai-prompt">Copy install prompt</button>
+    <pre id="ai-prompt" hidden>I want to install a free Excel for Mac add-in called "Excel Auditor". It is open source and lives at https://github.com/andresjz83/excel-auditor.
 
 I am using macOS. Please walk me through the install step by step. Be specific about which Finder menus to open and which keys to press. Don't assume I know how to use Terminal or how to create folders by hand. Use Finder where possible.
 
@@ -116,7 +117,6 @@ After those two things:
 - I open the auditor each Excel session via Insert → Add-ins → Excel Auditor in Excel's menu bar.
 
 (If you happen to be a coding agent like Claude Code or Cursor with access to my computer, feel free to just run the install yourself. Otherwise walk me through it in chat.)</pre>
-    <button class="copy-btn copy-prompt" data-copy-target="ai-prompt">Copy prompt</button>
   </div>
 
   <h3>Option B — Click-to-install (no terminal knowledge needed)</h3>

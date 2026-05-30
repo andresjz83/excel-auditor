@@ -68,6 +68,23 @@
     }
     .copy-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
     .warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); padding: 10px 14px; border-radius: 4px; font-size: 14px; margin: 20px 0; }
+    h3 { font-size: 17px; margin: 28px 0 10px; letter-spacing: -0.01em; color: var(--accent); }
+    .prompt-block { position: relative; margin: 0 0 16px; }
+    .prompt-block pre {
+      background: #1d2237; color: #f0f0ec;
+      padding: 16px 18px; padding-right: 92px;
+      border-radius: 5px; overflow: auto; max-height: 360px;
+      font-family: "DM Mono", ui-monospace, Menlo, monospace;
+      font-size: 12.5px; line-height: 1.55;
+      white-space: pre-wrap; word-break: break-word;
+      margin: 0;
+    }
+    .copy-prompt {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(255,255,255,0.12); color: white;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .copy-prompt:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); }
     .features { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; margin: 12px 0 28px; padding: 0; list-style: none; font-size: 14.5px; color: var(--muted); }
     .features li::before { content: "✓ "; color: var(--accent); font-weight: 600; }
     footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
@@ -78,28 +95,76 @@
   <h1>Excel Auditor</h1>
   <p class="tagline">Free Office.js add-in for Excel on Mac. Audit precedents, dependents, and formula chains across an entire workbook.</p>
 
-  <a class="download" href="manifest.xml" download="excel-auditor-manifest.xml">Download manifest.xml</a>
+  <h2>Install</h2>
+  <p>Three ways. Pick what matches your comfort level.</p>
 
-  <h2>Install in 3 steps</h2>
+  <h3>Option A — Ask your AI (easiest)</h3>
+  <p>Open ChatGPT, Claude, Gemini, or any other AI chat. Paste the prompt below. It'll walk you through every click.</p>
+  <div class="prompt-block">
+    <pre id="ai-prompt">I want to install a free Excel for Mac add-in called "Excel Auditor". It is open source and lives at https://github.com/andresjz83/excel-auditor.
+
+I am using macOS. Please walk me through the install step by step. Be specific about which Finder menus to open and which keys to press. Don't assume I know how to use Terminal or how to create folders by hand. Use Finder where possible.
+
+Two things need to happen on my Mac:
+
+1. The folder at this path needs to exist: ~/Library/Containers/com.microsoft.Excel/Data/Documents/wef/ — create it if it doesn't already exist.
+
+2. The manifest file at https://andresjz83.github.io/excel-auditor/manifest.xml needs to be downloaded into that folder, with the filename "excel-auditor-manifest.xml".
+
+After those two things:
+- I quit Excel fully (Cmd+Q) and reopen it.
+- I open the auditor each Excel session via Insert → Add-ins → Excel Auditor in Excel's menu bar.
+
+(If you happen to be a coding agent like Claude Code or Cursor with access to my computer, feel free to just run the install yourself. Otherwise walk me through it in chat.)</pre>
+    <button class="copy-btn copy-prompt" data-copy-target="ai-prompt">Copy prompt</button>
+  </div>
+
+  <h3>Option B — Click-to-install (no terminal knowledge needed)</h3>
+  <p>Download a tiny installer that creates the folder and places the manifest for you.</p>
+  <a class="download" href="install.zip" download="excel-auditor-install.zip">Download installer</a>
   <ol class="steps">
     <li>
-      <div class="step-title">Open the Excel sideload folder in Finder.</div>
+      <div class="step-title">Double-click <code>excel-auditor-install.zip</code> in your Downloads.</div>
+      <div>macOS unzips it automatically. A file called <code>install.command</code> appears next to it.</div>
+    </li>
+    <li>
+      <div class="step-title">Right-click <code>install.command</code> → Open.</div>
+      <div>macOS will warn that it's from an unidentified developer. Click <strong>Open</strong>. (This warning only appears the first time.)</div>
+    </li>
+    <li>
+      <div class="step-title">A Terminal window pops up, runs the install, then asks you to press Enter.</div>
+      <div>Press Enter to close. The install is done.</div>
+    </li>
+    <li>
+      <div class="step-title">Quit Excel (<kbd>⌘Q</kbd>), reopen it.</div>
+    </li>
+  </ol>
+
+  <h3>Option C — Manual install (if you prefer to see what's happening)</h3>
+  <a class="download" href="manifest.xml" download="excel-auditor-manifest.xml">Download manifest.xml</a>
+  <ol class="steps">
+    <li>
+      <div class="step-title">Open Finder. Press <kbd>⌘⇧G</kbd>.</div>
       <div>
-        Press <kbd>⌘⇧G</kbd> in Finder and paste this path:
+        A path bar appears. Paste this exact path and press Enter:
         <br>
-        <span class="path-pill" id="wef-path">~/Library/Containers/com.microsoft.Excel/Data/Documents/wef/</span>
-        <button class="copy-btn" data-copy="~/Library/Containers/com.microsoft.Excel/Data/Documents/wef/">Copy</button>
-        <br>
-        <small style="color: var(--muted);">If the <code>wef</code> folder doesn't exist, create it.</small>
+        <span class="path-pill">~/Library/Containers/com.microsoft.Excel/Data/Documents/</span>
+        <button class="copy-btn" data-copy="~/Library/Containers/com.microsoft.Excel/Data/Documents/">Copy</button>
       </div>
     </li>
     <li>
-      <div class="step-title">Drop the downloaded <code>excel-auditor-manifest.xml</code> into that folder.</div>
-      <div>That's the entire install. No terminal, no Node, nothing.</div>
+      <div class="step-title">Look for a folder named <code>wef</code> inside this folder.</div>
+      <div>
+        <strong>If you see it:</strong> double-click to open it.
+        <br>
+        <strong>If you don't see it:</strong> right-click inside the Finder window (on the empty white area) → <strong>New Folder</strong> → name the folder <code>wef</code> (lowercase, no spaces). Then double-click into it.
+      </div>
     </li>
     <li>
-      <div class="step-title">Quit Excel completely (<kbd>⌘Q</kbd>), then reopen it.</div>
-      <div>Excel re-scans the sideload folder on launch.</div>
+      <div class="step-title">Drag the downloaded <code>excel-auditor-manifest.xml</code> into the wef folder.</div>
+    </li>
+    <li>
+      <div class="step-title">Quit Excel (<kbd>⌘Q</kbd>), reopen it.</div>
     </li>
   </ol>
 
@@ -157,7 +222,11 @@
   document.querySelectorAll(".copy-btn").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
-      const text = btn.dataset.copy || "";
+      let text = btn.dataset.copy || "";
+      if (!text && btn.dataset.copyTarget) {
+        const target = document.getElementById(btn.dataset.copyTarget);
+        text = target ? target.textContent : "";
+      }
       const original = btn.textContent;
       let ok = false;
       try {

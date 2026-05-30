@@ -2,9 +2,7 @@
 
 Range-level precedent and dependent tracing for Excel on Mac. Office.js task-pane add-in.
 
-> Native Excel can only trace one cell at a time. This walks every cell in a multi-cell selection, surfaces all upstream/downstream cells (recursively), groups them by sheet in a tree, and highlights the matching reference in the parent formula as you navigate. Macabacus-style behavior without the licence.
-
-Not affiliated with Macabacus or Microsoft.
+> Native Excel can only trace one cell at a time. This walks every cell in a multi-cell selection, surfaces all upstream/downstream cells (recursively), groups them by sheet in a tree, and highlights the matching reference in the parent formula as you navigate.
 
 ---
 
@@ -97,4 +95,4 @@ For uninstall: `./uninstall.sh`. For debugging a broken install: check `~/.confi
 
 ## License
 
-MIT.
+See [LICENSE](LICENSE).

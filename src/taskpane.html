@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel Auditor</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="taskpane.css" />
+</head>
+<body>
+  <header>
+    <h1>Excel Auditor <span class="version">v9</span></h1>
+    <p id="selection-label">Select cells in the sheet…</p>
+  </header>
+
+  <section class="controls">
+    <div class="row">
+      <label for="depth">Depth</label>
+      <select id="depth">
+        <option value="1">1 level</option>
+        <option value="2">2 levels</option>
+        <option value="3" selected>3 levels</option>
+        <option value="5">5 levels</option>
+        <option value="999">All</option>
+      </select>
+    </div>
+    <div class="row buttons">
+      <button id="btn-precedents" class="primary">Show precedents</button>
+      <button id="btn-dependents" class="primary">Show dependents</button>
+    </div>
+    <div class="row buttons">
+      <button id="btn-highlight">Highlight on sheet</button>
+      <button id="btn-clear">Clear highlights</button>
+    </div>
+    <div class="row">
+      <label class="checkbox">
+        <input type="checkbox" id="opt-deletecheck" />
+        Safe-to-delete mode (count downstream dependents)
+      </label>
+    </div>
+    <div class="row buttons">
+      <button id="btn-rebuild" title="Re-scan the workbook. Use this after you edit formulas.">Rebuild index</button>
+    </div>
+  </section>
+
+  <section id="status" class="status"></section>
+  <section id="results"></section>
+
+  <script src="auditor.js"></script>
+</body>
+</html>

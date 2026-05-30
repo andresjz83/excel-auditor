@@ -1,0 +1,19 @@
+{
+  "name": "excel-auditor",
+  "version": "0.1.0",
+  "description": "Range-level precedent and dependent tracing for Excel models.",
+  "private": true,
+  "scripts": {
+    "start": "office-addin-debugging start manifest.xml desktop",
+    "stop": "office-addin-debugging stop manifest.xml",
+    "dev-server": "office-addin-dev-certs install --machine && http-server -S -C ~/.office-addin-dev-certs/localhost.crt -K ~/.office-addin-dev-certs/localhost.key -p 3000 -c-1 --cors src",
+    "sideload": "office-addin-debugging start manifest.xml desktop --app excel",
+    "validate": "office-addin-manifest validate manifest.xml"
+  },
+  "devDependencies": {
+    "office-addin-debugging": "^6.0.0",
+    "office-addin-dev-certs": "^2.0.0",
+    "office-addin-manifest": "^2.0.0",
+    "http-server": "^14.1.1"
+  }
+}

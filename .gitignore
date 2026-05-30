@@ -1,0 +1,4 @@
+node_modules/
+.machine-guid
+*.log
+.DS_Store

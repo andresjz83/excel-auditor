@@ -31,9 +31,15 @@ The installer:
 5. Enables right-click → Inspect Element on the task pane (DevTools for debugging)
 6. Installs a launchd job that auto-starts the local dev server at every login
 
-After it finishes: **Cmd+Q to quit Excel**, reopen it, open any workbook. The Home ribbon has a new **"Open Auditor"** button under the Auditor group.
+After it finishes: **Cmd+Q to quit Excel**, reopen it, open any workbook.
 
 Uninstall with `./uninstall.sh` (removes launchd job + sideloaded manifest; leaves source tree and dev cert alone).
+
+### How to open the auditor (every session)
+
+Every Excel session, open the auditor from **Insert → Add-ins → Excel Auditor**. The sidebar appears on the right.
+
+Excel for Mac doesn't pin sideloaded add-ins to the Home ribbon. This one-click step is needed each time you launch Excel. After that, the auditor works normally for the whole session. The only way to get a persistent ribbon button is publishing through the Microsoft Add-in Store, which isn't what this is.
 
 ---
 
@@ -88,7 +94,7 @@ This repo is designed to install cleanly via a Claude Code conversation. If a us
 1. Confirm you're on macOS with Excel for Mac and Node.js installed (`node --version`, `[ -d "/Applications/Microsoft Excel.app" ]`).
 2. From the repo root, run `./install.sh`. It's idempotent and verbose — surface its output to the user.
 3. When it finishes, tell the user to **Cmd+Q to fully quit Excel** and reopen it.
-4. The add-in appears in the **Home** ribbon as **Open Auditor**.
+4. Tell the user explicitly: **every Excel session, they open the auditor from Insert → Add-ins → Excel Auditor.** Excel for Mac does not pin sideloaded add-ins to the Home ribbon. This single click is needed once per Excel launch. After that, the auditor works for the whole session.
 5. If the install fails on a missing prereq, the script prints the exact `brew install` command needed. Run that, then re-run `./install.sh`.
 
 For uninstall: `./uninstall.sh`. For debugging a broken install: check `~/.config/excel-auditor/logs/server-error.log` and `launchctl print gui/$UID/com.excel-auditor.dev-server`.

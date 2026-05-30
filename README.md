@@ -8,9 +8,17 @@ Not affiliated with Macabacus or Microsoft.
 
 ---
 
-## Quick install (recommended)
+## Install
 
-Open a terminal in this directory and run:
+Pick one. The hosted option requires nothing on your machine. The local option keeps everything offline.
+
+### Hosted install (no terminal, no dependencies)
+
+👉 **[andresjz83.github.io/excel-auditor](https://andresjz83.github.io/excel-auditor/)** — one-click download of `manifest.xml`, three-step install in Excel. Online-only (Excel fetches the add-in code from GitHub Pages each session).
+
+### Local install (offline, runs everything from your machine)
+
+Clone this repo and run:
 
 ```bash
 ./install.sh
@@ -54,9 +62,11 @@ Features:
 | File | Role |
 |---|---|
 | `manifest.xml` | Office add-in manifest (sideloaded into Excel) |
-| `src/taskpane.html` | Sidebar UI shell |
-| `src/taskpane.css` | Styling |
-| `src/auditor.js` | All the audit logic (formula-text parser, BFS walker, reverse index builder, render) |
+| `docs/taskpane.html` | Sidebar UI shell (also served by GitHub Pages) |
+| `docs/taskpane.css` | Styling |
+| `docs/auditor.js` | All the audit logic (formula-text parser, BFS walker, reverse index builder, render) |
+| `docs/index.html` | Public landing page for the hosted install |
+| `docs/manifest.xml` | Hosted-install manifest (points at GitHub Pages URLs) |
 | `server/run-server.sh` | Wrapper that launches `http-server` with the local TLS cert |
 | `server/com.excel-auditor.dev-server.plist.template` | launchd config template, materialized by `install.sh` |
 | `install.sh` / `uninstall.sh` | One-shot install + clean removal |

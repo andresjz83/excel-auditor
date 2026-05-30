@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel Auditor — free precedent/dependent tracing for Excel on Mac</title>
+  <meta name="description" content="Free Office.js add-in for Excel on Mac. Audit precedents, dependents, and formula chains across an entire workbook." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F7F3;
+      --ink: #272D45;
+      --muted: #6b7280;
+      --line: #E5E5E0;
+      --accent: #437066;
+      --accent-soft: #e9f1ee;
+      --warn-bg: #fff7e6;
+      --warn-border: #f0d489;
+      --warn-text: #6d5300;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", -apple-system, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 56px 32px 80px; }
+    h1 { font-size: 36px; margin: 0 0 8px; letter-spacing: -0.02em; }
+    .tagline { font-size: 17px; color: var(--muted); margin: 0 0 32px; }
+    h2 { font-size: 20px; margin: 40px 0 12px; letter-spacing: -0.01em; }
+    p { margin: 0 0 14px; }
+    a { color: var(--accent); }
+    a:hover { color: #345a52; }
+    code, kbd { font-family: "DM Mono", ui-monospace, Menlo, monospace; font-size: 0.9em; background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; }
+    kbd { border: 1px solid var(--line); }
+    .download {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: white; text-decoration: none;
+      padding: 12px 22px; border-radius: 5px; font-weight: 600;
+      font-size: 15px; margin: 8px 0 24px;
+      transition: background 120ms;
+    }
+    .download:hover { background: #345a52; color: white; }
+    .download::before { content: "↓"; font-size: 17px; }
+    .steps { padding: 0; margin: 0; counter-reset: step; }
+    .steps li { list-style: none; counter-increment: step; padding: 14px 0 14px 44px; position: relative; border-bottom: 1px solid var(--line); }
+    .steps li:last-child { border-bottom: none; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 12px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent); color: white;
+      font-family: "DM Mono", monospace;
+      font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-title { font-weight: 600; margin-bottom: 4px; }
+    .path-pill { display: inline-block; word-break: break-all; font-family: "DM Mono", monospace; font-size: 12px; background: white; border: 1px solid var(--line); padding: 4px 8px; border-radius: 4px; }
+    .copy-btn {
+      display: inline-block; margin-left: 8px; padding: 2px 8px;
+      font-family: "DM Sans", sans-serif; font-size: 11.5px;
+      background: white; border: 1px solid var(--line); color: var(--ink);
+      border-radius: 3px; cursor: pointer; vertical-align: middle;
+    }
+    .copy-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+    .warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); padding: 10px 14px; border-radius: 4px; font-size: 14px; margin: 20px 0; }
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; margin: 12px 0 28px; padding: 0; list-style: none; font-size: 14.5px; color: var(--muted); }
+    .features li::before { content: "✓ "; color: var(--accent); font-weight: 600; }
+    footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Excel Auditor</h1>
+  <p class="tagline">Free Office.js add-in for Excel on Mac. Audit precedents, dependents, and formula chains across an entire workbook.</p>
+
+  <a class="download" href="manifest.xml" download="excel-auditor-manifest.xml">Download manifest.xml</a>
+
+  <h2>Install in 3 steps</h2>
+  <ol class="steps">
+    <li>
+      <div class="step-title">Open the Excel sideload folder in Finder.</div>
+      <div>
+        Press <kbd>⌘⇧G</kbd> in Finder and paste this path:
+        <br>
+        <span class="path-pill" id="wef-path">~/Library/Containers/com.microsoft.Excel/Data/Documents/wef/</span>
+        <button class="copy-btn" data-copy="~/Library/Containers/com.microsoft.Excel/Data/Documents/wef/">Copy</button>
+        <br>
+        <small style="color: var(--muted);">If the <code>wef</code> folder doesn't exist, create it.</small>
+      </div>
+    </li>
+    <li>
+      <div class="step-title">Drop the downloaded <code>excel-auditor-manifest.xml</code> into that folder.</div>
+      <div>That's the entire install. No terminal, no Node, nothing.</div>
+    </li>
+    <li>
+      <div class="step-title">Quit Excel completely (<kbd>⌘Q</kbd>), then reopen it.</div>
+      <div>The <strong>Home</strong> ribbon now has an <strong>Open Auditor</strong> button. Click it.</div>
+    </li>
+  </ol>
+
+  <div class="warn">
+    <strong>Online-only.</strong> The add-in's code is hosted on GitHub Pages. Excel fetches it from the internet each time you open the pane. For an offline-capable install that runs everything from your machine, see the <a href="https://github.com/andresjz83/excel-auditor#local-install">local install option</a> on GitHub.
+  </div>
+
+  <h2>What it does</h2>
+  <ul class="features">
+    <li>Multi-cell precedent tracing</li>
+    <li>Multi-cell dependent tracing</li>
+    <li>Tree view with sheet grouping</li>
+    <li>Formula highlight on focus</li>
+    <li>↑/↓ arrow navigation</li>
+    <li>Esc clears, doesn't close</li>
+    <li>Copy formula button</li>
+    <li>Safe-to-delete mode</li>
+    <li>Opacity warnings (INDIRECT/OFFSET)</li>
+    <li>Free, MIT, open source</li>
+  </ul>
+
+  <h2>Uninstall</h2>
+  <p>Delete <code>excel-auditor-manifest.xml</code> from the same folder you dropped it into. Restart Excel.</p>
+
+  <h2>Source &amp; issues</h2>
+  <p><a href="https://github.com/andresjz83/excel-auditor">github.com/andresjz83/excel-auditor</a></p>
+
+  <footer>
+    Not affiliated with Macabacus or Microsoft. MIT license. Excel for Mac only.
+  </footer>
+</main>
+<script>
+  document.querySelectorAll(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+        const original = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(() => { btn.textContent = original; }, 1200);
+      });
+    });
+  });
+</script>
+</body>
+</html>

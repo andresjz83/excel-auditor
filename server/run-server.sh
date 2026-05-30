@@ -25,7 +25,7 @@ if [ -z "$NPX_BIN" ]; then
   exit 1
 fi
 
-cd "$ROOT/src"
+cd "$ROOT/docs"
 # Bind to 127.0.0.1 only — otherwise http-server listens on 0.0.0.0 and the
 # add-in source becomes reachable from anyone on the same network.
 exec "$NPX_BIN" http-server \

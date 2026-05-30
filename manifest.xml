@@ -14,7 +14,7 @@
   <Description DefaultValue="Range-level precedent and dependent tracing for Excel models." />
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png" />
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-80.png" />
-  <SupportUrl DefaultValue="https://github.com/" />
+  <SupportUrl DefaultValue="https://github.com/andresjz83/excel-auditor" />
 
   <AppDomains>
     <AppDomain>https://localhost:3000</AppDomain>
@@ -79,7 +79,7 @@
         <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://github.com/" />
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://github.com/andresjz83/excel-auditor" />
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html" />
       </bt:Urls>
       <bt:ShortStrings>

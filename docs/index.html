@@ -132,13 +132,45 @@
   </footer>
 </main>
 <script>
+  function fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "0";
+    ta.style.left = "0";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (_) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+
   document.querySelectorAll(".copy-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      navigator.clipboard.writeText(btn.dataset.copy).then(() => {
-        const original = btn.textContent;
-        btn.textContent = "Copied";
-        setTimeout(() => { btn.textContent = original; }, 1200);
-      });
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const text = btn.dataset.copy || "";
+      const original = btn.textContent;
+      let ok = false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          ok = true;
+        } else {
+          ok = fallbackCopy(text);
+        }
+      } catch (_) {
+        ok = fallbackCopy(text);
+      }
+      btn.textContent = ok ? "Copied" : "Couldn’t copy";
+      btn.style.background = ok ? "" : "#fde8e3";
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = "";
+      }, 1500);
     });
   });
 </script>

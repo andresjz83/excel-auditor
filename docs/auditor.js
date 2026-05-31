@@ -307,6 +307,20 @@ async function runAudit(direction) {
       console.log("[auditor] selection:", selection.address, "sheet:", selSheet.name);
       diag("selection", { sheet: selSheet.name, address: selection.address, cells: selection.cellCount });
 
+      // TEST: native trace-precedents arrows. If this throws on Mac Excel,
+      // we fall back gracefully and log the error in diag.
+      if (direction === "precedents") {
+        try {
+          selection.showPrecedents();
+          await ctx.sync();
+          diag("native arrows: showPrecedents() OK");
+          setStatus("Native arrows drawn. Audit running…");
+        } catch (arrErr) {
+          diag("native arrows: showPrecedents() FAILED", arrErr.message || String(arrErr));
+          console.warn("[auditor] showPrecedents failed:", arrErr);
+        }
+      }
+
       const selectionSheet = selSheet.name;
       const r0 = selection.rowIndex;
       const c0 = selection.columnIndex;

@@ -35,6 +35,8 @@ After it finishes: **Cmd+Q to quit Excel**, reopen it, open any workbook.
 
 Uninstall with `./uninstall.sh` (removes launchd job + sideloaded manifest; leaves source tree and dev cert alone).
 
+The local install serves from your clone, so it does not auto-update. Run `git pull` in this repo to get the latest version. (The hosted install updates on its own.)
+
 ### How to open the auditor (every session)
 
 Every Excel session, open the auditor from **Insert → Add-ins → Excel Auditor**. The sidebar appears on the right.

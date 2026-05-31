@@ -103,4 +103,4 @@ For uninstall: `./uninstall.sh`. For debugging a broken install: check `~/.confi
 
 ## License
 
-See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

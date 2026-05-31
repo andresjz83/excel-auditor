@@ -767,8 +767,14 @@ function renderResults(results) {
     if (!childrenOf.has(item.parentKey)) childrenOf.set(item.parentKey, []);
     childrenOf.get(item.parentKey).push(item);
   }
-  for (const arr of childrenOf.values()) {
-    arr.sort((a, b) => a.sheet === b.sheet ? cmpAddress(a.address, b.address) : a.sheet.localeCompare(b.sheet));
+  // Precedents keep formula order (the order references appear in the parent
+  // formula, left to right), so walking the list moves the yellow highlight
+  // smoothly through the formula. Dependents have no single parent formula to
+  // follow, so sort them by sheet then address for findability.
+  if (results.direction !== "precedents") {
+    for (const arr of childrenOf.values()) {
+      arr.sort((a, b) => a.sheet === b.sheet ? cmpAddress(a.address, b.address) : a.sheet.localeCompare(b.sheet));
+    }
   }
 
   const tree = document.createElement("div");

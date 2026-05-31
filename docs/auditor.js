@@ -14,7 +14,30 @@ const state = {
   depIndex: null,  // Map<"sheet!address", Set<"sheet!address">> — reverse: precedent → its dependents
   formulaIndex: null, // Map<"sheet!address", formula string> — cache of every formula in workbook
   indexBuiltAt: null,
+  // Cells we've called showPrecedents() / showDependents() on, so we can call
+  // the (true) variant later to remove their native arrows.
+  arrowedPrecedents: [], // [{sheet, address}]
+  arrowedDependents: [], // [{sheet, address}]
 };
+
+async function clearNativeArrows() {
+  if (!state.arrowedPrecedents.length && !state.arrowedDependents.length) return;
+  const pre = state.arrowedPrecedents.splice(0);
+  const dep = state.arrowedDependents.splice(0);
+  try {
+    await Excel.run(async (ctx) => {
+      for (const { sheet, address } of pre) {
+        ctx.workbook.worksheets.getItem(sheet).getRange(address).showPrecedents(true);
+      }
+      for (const { sheet, address } of dep) {
+        ctx.workbook.worksheets.getItem(sheet).getRange(address).showDependents(true);
+      }
+      await ctx.sync();
+    });
+  } catch (e) {
+    console.warn("[auditor] clearNativeArrows failed:", e);
+  }
+}
 
 Office.onReady((info) => {
   if (info.host !== Office.HostType.Excel) {
@@ -35,6 +58,7 @@ function clearResults() {
   state.highlighted.length = 0; // any pending highlights are conceptually orphaned
   lastRenderedResults = null;
   formulasByKey = new Map();
+  clearNativeArrows(); // fire-and-forget; status will update if it errors
   setStatus("Cleared. Pick a cell and Show precedents / dependents.");
   document.getElementById("btn-precedents")?.focus();
 }
@@ -178,13 +202,14 @@ async function runDependents() {
   const safeDelete = document.getElementById("opt-deletecheck").checked;
   document.getElementById("results").innerHTML = "";
   diagLog.length = 0;
+  await clearNativeArrows(); // remove any arrows from a prior audit
 
   if (!state.depIndex) {
     const ok = await buildDependencyIndex();
     if (!ok) return;
   }
 
-  // Get the selection.
+  // Get the selection, and try drawing native dependent arrows.
   let selectionInfo;
   try {
     selectionInfo = await Excel.run(async (ctx) => {
@@ -192,6 +217,15 @@ async function runDependents() {
       sel.load(["address", "rowCount", "columnCount", "rowIndex", "columnIndex"]);
       sel.worksheet.load("name");
       await ctx.sync();
+      try {
+        sel.showDependents();
+        await ctx.sync();
+        state.arrowedDependents.push({ sheet: sel.worksheet.name, address: sel.address.split("!").pop() });
+        diag("native arrows: showDependents() OK");
+      } catch (arrErr) {
+        diag("native arrows: showDependents() FAILED", arrErr.message || String(arrErr));
+        console.warn("[auditor] showDependents failed:", arrErr);
+      }
       return {
         sheet: sel.worksheet.name,
         address: sel.address,
@@ -294,6 +328,7 @@ async function runAudit(direction) {
   document.getElementById("results").innerHTML = "";
   diagLog.length = 0;
   diag("BEGIN", { direction, depth });
+  await clearNativeArrows(); // remove any arrows from a prior audit
 
   try {
     let step = "init";
@@ -307,14 +342,14 @@ async function runAudit(direction) {
       console.log("[auditor] selection:", selection.address, "sheet:", selSheet.name);
       diag("selection", { sheet: selSheet.name, address: selection.address, cells: selection.cellCount });
 
-      // TEST: native trace-precedents arrows. If this throws on Mac Excel,
-      // we fall back gracefully and log the error in diag.
+      // Native trace-precedents arrows. Wrapped in try/catch in case the API
+      // throws on a specific Mac Excel build.
       if (direction === "precedents") {
         try {
           selection.showPrecedents();
           await ctx.sync();
+          state.arrowedPrecedents.push({ sheet: selSheet.name, address: selection.address.split("!").pop() });
           diag("native arrows: showPrecedents() OK");
-          setStatus("Native arrows drawn. Audit running…");
         } catch (arrErr) {
           diag("native arrows: showPrecedents() FAILED", arrErr.message || String(arrErr));
           console.warn("[auditor] showPrecedents failed:", arrErr);
